@@ -889,10 +889,21 @@ def export_text(decision_tree, feature_names=None, max_depth=10,
     else:
         value_fmt = "{}{} value: {}\n"
 
+    # Prepare node-wise feature names, skipping undefined features for leaves
     if feature_names:
-        feature_names_ = [feature_names[i] for i in tree_.feature]
+        feature_names_ = []
+        for fid in tree_.feature:
+            if fid != _tree.TREE_UNDEFINED:
+                feature_names_.append(feature_names[fid])
+            else:
+                feature_names_.append(None)
     else:
-        feature_names_ = ["feature_{}".format(i) for i in tree_.feature]
+        feature_names_ = []
+        for fid in tree_.feature:
+            if fid != _tree.TREE_UNDEFINED:
+                feature_names_.append(f"feature_{fid}")
+            else:
+                feature_names_.append(None)
 
     export_text.report = ""
 

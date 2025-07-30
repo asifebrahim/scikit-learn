@@ -10,6 +10,7 @@ from sklearn.base import is_classifier
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.tree import export_graphviz, plot_tree, export_text
+from sklearn.datasets import load_iris
 from io import StringIO
 from sklearn.utils.testing import (assert_in, assert_equal, assert_raises,
                                    assert_less_equal, assert_raises_regex,
@@ -396,6 +397,15 @@ def test_export_text():
     assert export_text(reg, decimals=1) == expected_report
     assert export_text(reg, decimals=1, show_weights=True) == expected_report
 
+def test_export_text_one_feature():
+    iris = load_iris()
+    X = iris.data[:, [0]]
+    y = iris.target
+    clf = DecisionTreeClassifier(random_state=0)
+    clf.fit(X, y)
+    text = export_text(clf, feature_names=['sepal_length'])
+    # should include feature name and not error
+    assert_in('sepal_length', text)
 
 def test_plot_tree_entropy(pyplot):
     # mostly smoke tests
