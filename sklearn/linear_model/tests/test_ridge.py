@@ -598,6 +598,22 @@ def test_ridgecv_store_cv_values():
     assert_equal(r.cv_values_.shape, (n_samples, n_responses, n_alphas))
 
 
+def test_ridge_classifier_cv_store_cv_values():
+    # Test RidgeClassifierCV's store_cv_values attribute.
+    rng = np.random.RandomState(0)
+
+    n_samples = 8
+    n_features = 5
+    n_classes = 3
+    X = rng.randn(n_samples, n_features)
+    y = rng.randint(n_classes, size=n_samples)
+    alphas = [1e-1, 1e0, 1e1]
+
+    clf = RidgeClassifierCV(alphas=alphas, store_cv_values=True)
+    clf.fit(X, y)
+    assert_equal(clf.cv_values_.shape, (n_samples, n_classes, len(alphas)))
+
+
 def test_ridgecv_sample_weight():
     rng = np.random.RandomState(0)
     alphas = (0.1, 1.0, 10.0)
